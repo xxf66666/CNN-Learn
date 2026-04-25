@@ -19,5 +19,6 @@ venv/
 # Matplotlib cache (in case it ever lands in the repo)
 .matplotlib/
 
-# MNIST raw data — regenerable by code/week1/mlp_numpy.py download_mnist()
-data/mnist/*.gz
+# 数据集策略: 源文件 (.gz / .tar.gz) 入仓库供复现,
+#            解压后的目录不入 (从源文件重新解压即可, 节省仓库体积)
+data/cifar10/cifar-10-batches-py/
