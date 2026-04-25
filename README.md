@@ -78,13 +78,65 @@ VGG / ResNet 在 CIFAR-10 上冲 90%+，加 BatchNorm / Dropout / 数据增强 /
 </tr>
 </table>
 
-## 高光成果
+## Demo 演示
+
+两个 Gradio demo，演示 ML demo 设计的两种范式：**Week 1 把用户输入塑造到训练分布**（手绘画板），**Week 2 诚实告知分布限制**（上传识别 + 警告说明）。
 
 <table>
 <tr>
 <td width="50%" align="center">
 
-**Week 1 输出 · MLP 第一层学到的"模板"**
+**Week 1 · MNIST 手绘数字识别**
+
+<video src="https://github.com/xxf66666/CNN-Learn/raw/main/assets/week1/outputs/week1_demo.mp4" controls width="100%"></video>
+
+[本地视频](assets/week1/outputs/week1_demo.mp4) · 启动: `python code/week1/app.py` → http://127.0.0.1:7860
+
+</td>
+<td width="50%" align="center">
+
+**Week 2 · LeNet on CIFAR-10 双模式 demo**
+
+<video src="https://github.com/xxf66666/CNN-Learn/raw/main/assets/week2/outputs/week2_demo.mp4" controls width="100%"></video>
+
+[本地视频](assets/week2/outputs/week2_demo.mp4) · 启动: `python code/week2/app.py` → http://127.0.0.1:7861
+
+</td>
+</tr>
+</table>
+
+## 快速开始
+
+```bash
+# 创建环境（已有 cnn 环境可跳过）
+conda create -n cnn python=3.10
+conda activate cnn
+python -m pip install -r requirements.txt
+```
+
+跑哪一周看你想要什么：
+
+| 想看 | 命令 |
+|---|---|
+| Week 1 训练（约 1 分钟）| `MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week1/mlp_numpy.py` |
+| Week 1 手绘 demo | `python code/week1/app.py` → http://127.0.0.1:7860 |
+| Week 2 教学插图（首次自动下载 CIFAR-10 ~163 MB）| `MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/figures.py` |
+| Week 2 NumPy 卷积/池化 grad check | `python code/week2/conv2d_numpy.py` + `python code/week2/maxpool_numpy.py` |
+| Week 2 LeNet 训练（约 8 分钟 on Apple MPS）| `MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/lenet_pytorch.py` |
+| Week 2 MLP-vs-LeNet 对比实验 | `python code/week2/compare_mlp_vs_lenet.py` |
+| Week 2 LeNet demo | `python code/week2/export_cifar_samples.py` + `python code/week2/app.py` → http://127.0.0.1:7861 |
+
+> **代理坑提示**：如果遇到 Gradio `502 Couldn't start the app` 错误，是系统 HTTP 代理（Clash / V2Ray 等）拦截 localhost 健康检查导致的；两个 `app.py` 都已在本进程里清掉相关代理变量，不影响系统全局设置。
+
+## 可视化产出
+
+学习过程中跑出来的几张图，分两类：**训练产出**（实际跑训练得到的曲线 / 对比图 / 权重热图）+ **教学插图**（在文档里讲卷积/通道/感受野等概念时画的辅助图，全部由 `code/week2/figures.py` 一键生成）。
+
+<table>
+<tr>
+<td width="50%" align="center">
+
+**Week 1 训练产出 · MLP 第一层学到的"模板"**
 
 <img src="assets/week1/outputs/weights_layer1.png" width="100%"/>
 
@@ -93,7 +145,7 @@ VGG / ResNet 在 CIFAR-10 上冲 90%+，加 BatchNorm / Dropout / 数据增强 /
 </td>
 <td width="50%" align="center">
 
-**Week 2 输出 · MLP vs LeNet 对比实验**
+**Week 2 训练产出 · MLP vs LeNet 对比实验**
 
 <img src="assets/week2/outputs/mlp_vs_lenet_comparison.png" width="100%"/>
 
@@ -122,29 +174,6 @@ VGG / ResNet 在 CIFAR-10 上冲 90%+，加 BatchNorm / Dropout / 数据增强 /
 </td>
 </tr>
 </table>
-
-## 快速开始
-
-```bash
-# 创建环境（已有 cnn 环境可跳过）
-conda create -n cnn python=3.10
-conda activate cnn
-python -m pip install -r requirements.txt
-```
-
-跑哪一周看你想要什么：
-
-| 想看 | 命令 |
-|---|---|
-| Week 1 训练（约 1 分钟）| `MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week1/mlp_numpy.py` |
-| Week 1 手绘 demo | `python code/week1/app.py` → http://127.0.0.1:7860 |
-| Week 2 教学插图（首次自动下载 CIFAR-10 ~163 MB）| `MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/figures.py` |
-| Week 2 NumPy 卷积/池化 grad check | `python code/week2/conv2d_numpy.py` + `python code/week2/maxpool_numpy.py` |
-| Week 2 LeNet 训练（约 8 分钟 on Apple MPS）| `MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/lenet_pytorch.py` |
-| Week 2 MLP-vs-LeNet 对比实验 | `python code/week2/compare_mlp_vs_lenet.py` |
-| Week 2 LeNet demo | `python code/week2/export_cifar_samples.py` + `python code/week2/app.py` → http://127.0.0.1:7861 |
-
-> **代理坑提示**：如果遇到 Gradio `502 Couldn't start the app` 错误，是系统 HTTP 代理（Clash / V2Ray 等）拦截 localhost 健康检查导致的；两个 `app.py` 都已在本进程里清掉相关代理变量，不影响系统全局设置。
 
 ## 项目结构
 
