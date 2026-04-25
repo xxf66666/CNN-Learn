@@ -19,6 +19,9 @@ venv/
 # Matplotlib cache (in case it ever lands in the repo)
 .matplotlib/
 
-# 数据集策略: 源文件 (.gz / .tar.gz) 入仓库供复现,
-#            解压后的目录不入 (从源文件重新解压即可, 节省仓库体积)
+# 数据集策略:
+#   - MNIST: 源 .gz 文件 (~11 MB 总, 单文件最大 9.7 MB) 入仓库供复现
+#   - CIFAR-10: 源 tar.gz 是 163 MB, 超过 GitHub 单文件 100 MB 上限,
+#               不入仓库; 首次跑 figures.py / lenet_pytorch.py 会自动下载
+data/cifar10/cifar-10-python.tar.gz
 data/cifar10/cifar-10-batches-py/
