@@ -88,18 +88,18 @@ VGG / ResNet 在 CIFAR-10 上冲 90%+，加 BatchNorm / Dropout / 数据增强 /
 
 **Week 1 · MNIST 手绘数字识别**
 
-<video src="https://github.com/xxf66666/CNN-Learn/raw/main/assets/week1/outputs/week1_demo.mp4" controls width="100%"></video>
+<img src="assets/week1/outputs/week1_demo.gif" width="100%"/>
 
-[本地视频](assets/week1/outputs/week1_demo.mp4) · 启动: `python code/week1/app.py` → http://127.0.0.1:7860
+启动: `python code/week1/app.py` → http://127.0.0.1:7860 · <sub>[mp4 高清原片](assets/week1/outputs/week1_demo.mp4)</sub>
 
 </td>
 <td width="50%" align="center">
 
 **Week 2 · LeNet on CIFAR-10 双模式 demo**
 
-<video src="https://github.com/xxf66666/CNN-Learn/raw/main/assets/week2/outputs/week2_demo.mp4" controls width="100%"></video>
+<img src="assets/week2/outputs/week2_demo.gif" width="100%"/>
 
-[本地视频](assets/week2/outputs/week2_demo.mp4) · 启动: `python code/week2/app.py` → http://127.0.0.1:7861
+启动: `python code/week2/app.py` → http://127.0.0.1:7861 · <sub>[mp4 高清原片](assets/week2/outputs/week2_demo.mp4)</sub>
 
 </td>
 </tr>
