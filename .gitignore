@@ -1,0 +1,23 @@
+# Editor / OS
+*.swp
+*.swo
+*~
+.DS_Store
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Local Claude settings (per-user, not shared)
+.claude/settings.local.json
+
+# Matplotlib cache (in case it ever lands in the repo)
+.matplotlib/
+
+# MNIST raw data — regenerable by code/week1/mlp_numpy.py download_mnist()
+data/mnist/*.gz
