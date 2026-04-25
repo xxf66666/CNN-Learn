@@ -1,18 +1,28 @@
 # CNN-Learn
 
-CNN-Learn 是一个从基础神经网络到卷积神经网络的学习项目。当前阶段重点是 Week 1：用纯 NumPy 手写一个 MLP，在 MNIST 手写数字数据集上跑通完整训练流程。
+CNN-Learn 是一个从基础神经网络到卷积神经网络的学习项目，按"问题驱动 → 数学推导 → 手写代码 → 工业级实现 → 可玩 demo"的节奏推进。当前进度：
+
+- **Week 1**：纯 NumPy 手写 MLP，MNIST 上 97.5% + Gradio 手绘画板 demo
+- **Week 2**：纯 NumPy 手写卷积/池化（grad check 通过）+ PyTorch 复现 LeNet 在 CIFAR-10 上 62.4% + MLP-vs-CNN 对比实验 + LeNet 双模式 demo
+- Week 3 / Week 4：见 `docs/00_learning_plan.md`
 
 ## 项目结构
 
 ```text
 CNN-Learn/
-├── code/          # 代码实现
-│   └── week1/
-│       └── mlp_numpy.py
-├── data/          # 数据集
-│   └── mnist/
-├── docs/          # 学习笔记和推导文档
-└── assets/        # 训练曲线、预测结果、权重可视化等输出图片
+├── code/
+│   ├── week1/         MLP numpy + Gradio 手绘 demo
+│   └── week2/         conv2d/maxpool numpy + LeNet PyTorch + Gradio demo + 教学插图
+├── data/
+│   ├── mnist/         源 .gz 文件（入仓库供复现）
+│   └── cifar10/       源 .tar.gz 文件
+├── docs/              学习笔记、理论推导、思考记录、汇报总结
+└── assets/
+    ├── week1/         训练曲线 + 预测可视化 + 权重热图
+    └── week2/
+        ├── figures/   10 张教学插图（CIFAR horse 演示）
+        ├── outputs/   LeNet 训练产出（曲线 / 对比图 / 权重）
+        └── samples/   100 张 CIFAR-10 测试集 PNG（每类 10 张, demo 用）
 ```
 
 ## 环境准备
@@ -133,6 +143,105 @@ pkill -f "python code/week1/app.py"
 ```
 
 如果遇到 `Couldn't start the app ... 502` 错误，是系统 HTTP 代理（Clash / V2Ray 等）拦截 localhost 健康检查导致的，`app.py` 已经在本进程里清掉了相关代理变量，不影响系统全局设置。详细原理、预处理细节、为什么自己手写的数字准确率比测试集低，见 `docs/week1/09_handwriting_demo.md`。
+
+---
+
+## Week 2：CNN 核心 + LeNet on CIFAR-10
+
+Week 2 把 Week 1 的"手写一切"路径走完整套 CNN：先用纯 NumPy 实现卷积层和池化层（含反向传播 + gradient check 全过），然后切到 PyTorch 复现 LeNet-5 在 CIFAR-10 上训练（62.4% 测试准确率），最后用对比实验把"为什么需要 CNN"从口号变成数据。
+
+### 1. 生成 10 张教学插图（首次会下载 CIFAR-10 ~163 MB 源 tar.gz）
+
+```bash
+MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/figures.py
+```
+
+输出到 `assets/week2/figures/`，包含真实图片的边缘检测、RGB 通道分解、padding 覆盖热图、感受野扩张、卷积反向传播步骤等。`docs/week2/02-06_*.md` 各章节直接引用。
+
+### 2. 验证 numpy 卷积/池化数学正确性
+
+```bash
+python code/week2/conv2d_numpy.py     # 期望: 24/24 ✓ (相对误差 1e-11 ~ 1e-13)
+python code/week2/maxpool_numpy.py    # 期望: 15/15 ✓
+```
+
+跟 Week 1 §10 同样的 gradient_check 套路。注意内部强制 `float64`——Week 2 踩到的工程坑，见 `docs/week2/07_thinking_log.md`。
+
+### 3. 训练 LeNet（约 8 分钟 on Apple MPS）
+
+```bash
+MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/lenet_pytorch.py
+```
+
+会保存：
+
+- `assets/week2/outputs/lenet_weights.pth` — 训好的 LeNet 权重 (~250 KB)
+- `assets/week2/outputs/lenet_training_curve.png` — loss + 准确率曲线
+- `assets/week2/outputs/lenet_per_class_acc.png` — 10 类柱图（动物用橙色突出）
+- `assets/week2/outputs/lenet_history.json` — epoch-by-epoch 指标
+
+预期末尾：`最终测试准确率: 61.xx%`、`其中动物类准确率: 56.xx%`。
+
+### 4. 跑 MLP-vs-LeNet 对比实验（约 5 分钟）
+
+```bash
+MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/compare_mlp_vs_lenet.py
+```
+
+同样训练设置下训一个 MLP（1.7M 参数）和一个 LeNet（62K 参数），分别在原测试集 + 平移 ±4 像素的测试集上评估。预期结果：
+
+```
+         |  原测试集 |  平移 ±4 px |  下降幅度
+   MLP   |   55.0%  |   42.4%    |  -12.6%
+  LeNet  |   62.4%  |   54.0%    |   -8.4%
+```
+
+LeNet 用 MLP 1/27 的参数赢了 7.4 个百分点，平移鲁棒性是 MLP 的 1.5 倍——把 `docs/week2/01_why_conv.md` 的"为什么需要 CNN"从口号变成数字。对比图存到 `assets/week2/outputs/mlp_vs_lenet_comparison.png`。
+
+### 5. LeNet 双模式 demo（可选）
+
+跟 Week 1 手绘 demo 配套，把训好的 LeNet 接到一个 Gradio 双 tab UI：
+
+- **Tab 1 测试集浏览**：从 100 张 CIFAR-10 测试样本随机抽，看模型在分布内的表现（~62%）
+- **Tab 2 上传识别**：用户上传任意图，顶部橙色提示框说明 32×32 / 10 类的训练分布限制，中间显示"模型实际看到的 32×32"
+
+```bash
+# 首次必做：训练（步骤 3）+ 导出 100 张 PNG
+python code/week2/export_cifar_samples.py
+
+# 自检 inference 链路
+python code/week2/inference.py
+# 期望: horse 第 0 张 → 预测 horse, 置信度 ~97%
+
+# 启动 UI
+python code/week2/app.py
+# 浏览器打开 http://127.0.0.1:7861 (跟 Week 1 demo 7860 错开)
+```
+
+完整设计、跟 Week 1 demo 的对照、警告样式说明见 `docs/week2/12_lenet_demo.md`。
+
+### 完整学习路径
+
+每周的理论推导、代码走读、思考记录、汇报总结都按统一格式：
+
+```text
+docs/week2/
+  00_tasks.md             任务总规划
+  01_why_conv.md          T1 为什么需要卷积
+  02_convolution.md       T2 卷积运算 (含真实图边缘检测)
+  03_padding_stride.md    T3 padding/stride 与输出尺寸
+  04_multi_channel.md     T4 多通道 + 多 filter
+  05_pooling.md           T5 池化 + 感受野
+  06_conv_backprop.md     T6 卷积反向传播 (Week 2 数学密度最高一节)
+  07_thinking_log.md      学习思考 + 工程踩坑记录
+  08_code_walkthrough.md  T7 numpy 实现走读
+  09_pytorch_intro.md     T8 PyTorch 思维切换
+  10_lenet_pytorch.md     T9 LeNet 实现 + 对比实验解读
+  11_week2_summary.md     汇报性总结 (适合做 PPT / 知乎博客底稿)
+  12_lenet_demo.md        拓展 demo 完整说明
+```
+
+---
 
 ## 学习路线
 

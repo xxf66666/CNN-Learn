@@ -14,18 +14,19 @@
 
 | 维度 | 指标 |
 |---|---|
-| 任务完成度 | T1–T9 全部完成（9/9）+ 1 个 MLP-vs-CNN 对比实验 |
+| 任务完成度 | T1–T9 全部完成（9/9）+ MLP-vs-CNN 对比实验 + 双模式 demo |
 | **LeNet 测试准确率** | **62.40%**（10 epoch SGD+momentum, MPS GPU）|
 | **LeNet 动物类准确率** | **56.32%**（CIFAR-10 中 6 类是动物）|
 | 模型规模对比 | MLP 1,707,274 / LeNet **62,006**（27 倍参数差，CNN 更准）|
 | 平移鲁棒性对比 | MLP 平移后 −12.57% / LeNet 平移后 **−8.44%**（1.5× 优势）|
 | 卷积 grad check | 24/24 ✓ 全过（相对误差 1e-11 ~ 1e-13）|
 | 池化 grad check | 15/15 ✓ 全过（同量级误差）|
-| 代码 | 5 个文件 / **1,805 行**（含 figures 790 行）|
-| 文档 | 11 篇 / **10.2 万字符**（理论 + 工程踩坑 + 代码走读 + 实验总结）|
-| 可视化 | **13 张 PNG**（10 张教学插图 + 3 张训练/对比图）|
+| 代码 | **8 个文件 / ~2,200 行**（含 figures 790 + demo 三件套 ~390）|
+| 文档 | **12 篇 / ~11.2 万字符**（理论 + 工程踩坑 + 代码走读 + 实验总结 + demo）|
+| 可视化资产 | **113 项**：10 教学插图 + 3 训练/对比图 + 100 张 CIFAR 测试样本 |
 | 数据集 | CIFAR-10（32×32 RGB，10 类，**6 类是动物**）|
 | 训练硬件 | Apple Silicon MPS，每 epoch ~43 秒 |
+| 拓展 demo | 双 tab Gradio UI（测试集浏览 + 上传识别 + 分布限制说明）|
 
 ---
 
@@ -43,6 +44,7 @@
 | T8 | PyTorch 思维切换 | `09_pytorch_intro.md` | — | ✅ |
 | T9 | LeNet 复现 + MLP 对比 | `10_lenet_pytorch.md` | `lenet_pytorch.py` `compare_mlp_vs_lenet.py` | ✅ |
 | 拓展 | 学习思考记录 | `07_thinking_log.md`（5 条概念 + 2 条工程坑）| — | ✅ |
+| 拓展 | LeNet 双模式 demo | `12_lenet_demo.md` | `app.py` `inference.py` `export_cifar_samples.py` | ✅ |
 
 ---
 
@@ -186,34 +188,59 @@ flowchart LR
 | `lenet_per_class_acc.png` | 各类别准确率柱图，动物类用橙色突出 |
 | `mlp_vs_lenet_comparison.png` | 4 个准确率 + 下降幅度标注 |
 
+### 5.5 拓展 demo：双模式 Gradio UI
+
+跟 Week 1 手绘 demo 配套，把训练好的 LeNet 接到一个 Gradio 双 tab UI（端口 7861）：
+
+- **Tab 1 测试集浏览**：从 100 张 CIFAR-10 测试样本随机抽，看模型在分布内的表现（接近 62%）
+- **Tab 2 上传识别**：用户上传任意图，顶部橙色提示框说明 32×32 / 10 类的训练分布限制，中间显示"模型实际看到的 32×32"
+
+**跟 Week 1 demo 的对照**——这是 ML demo 设计的两种范式：
+
+| | Week 1 手绘 demo | Week 2 LeNet demo |
+|---|---|---|
+| 数据分布管理 | 预处理把用户输入"塑造"到 MNIST 分布 | 承认无法对齐，**诚实告知限制** |
+| 适合任务 | 简单受控（手绘数字）| 开放/复杂（自然图像）|
+
+详细设计见 `12_lenet_demo.md`。100 张测试样本入仓库 (~220 KB)，clone 后直接能浏览，不需要解压 CIFAR-10 tar.gz。
+
 ---
 
 ## 6. 交付物清单
 
 ```
 CNN-Learn/
-├── code/week2/                                        共 5 文件 / 1,805 行
+├── code/week2/                                        共 8 文件 / ~2,200 行
 │   ├── figures.py                          790 行     一键生成 10 张教学插图
 │   ├── conv2d_numpy.py                     238 行     纯 numpy 卷积层 + grad check 24 项 ✓
 │   ├── maxpool_numpy.py                    191 行     纯 numpy MaxPool + grad check 15 项 ✓
 │   ├── lenet_pytorch.py                    326 行     LeNet 训练 + 评估 + 出图
-│   └── compare_mlp_vs_lenet.py             260 行     对比实验脚本
-├── docs/week2/                                        共 11 篇 / 10.2 万字符
+│   ├── compare_mlp_vs_lenet.py             260 行     对比实验脚本
+│   ├── export_cifar_samples.py              67 行     拓展 demo: 测试集 → 100 张 PNG
+│   ├── inference.py                        116 行     拓展 demo: 加载 + 预处理 + 预测
+│   └── app.py                              ~205 行    拓展 demo: Gradio 双 tab UI
+├── docs/week2/                                        共 12 篇 / ~11.2 万字符
 │   ├── 00_tasks.md                                    任务总规划
 │   ├── 01–06_*.md                                     T1-T6 理论推导 + 10 张可视化
 │   ├── 07_thinking_log.md                             5 条概念思考 + 2 条工程踩坑
 │   ├── 08_code_walkthrough.md                         T7 numpy 代码走读
 │   ├── 09_pytorch_intro.md                            T8 PyTorch 思维切换
 │   ├── 10_lenet_pytorch.md                            T9 LeNet 实现 + 对比实验解读
-│   └── 11_week2_summary.md                            本文
+│   ├── 11_week2_summary.md                            本文
+│   └── 12_lenet_demo.md                               拓展 demo 完整说明
 ├── assets/week2/
 │   ├── figures/                                       10 张教学插图（按章节组织）
-│   └── outputs/                                       LeNet 训练产出
-│       ├── lenet_weights.pth               ~250 KB    训好的 LeNet 权重
-│       ├── lenet_training_curve.png                   loss + 准确率曲线
-│       ├── lenet_per_class_acc.png                    10 类柱图
-│       ├── lenet_history.json                         训练历史（供后续复用）
-│       └── mlp_vs_lenet_comparison.png                对比柱图
+│   ├── outputs/                                       LeNet 训练产出
+│   │   ├── lenet_weights.pth               ~250 KB    训好的 LeNet 权重
+│   │   ├── lenet_training_curve.png                   loss + 准确率曲线
+│   │   ├── lenet_per_class_acc.png                    10 类柱图
+│   │   ├── lenet_history.json                         训练历史（供后续复用）
+│   │   └── mlp_vs_lenet_comparison.png                对比柱图
+│   └── samples/                            ~220 KB    100 张测试集 PNG (10 类×10)
+│       ├── airplane/  00.png … 09.png
+│       ├── automobile/  …
+│       ├── ... (8 more classes)
+│       └── truck/  00.png … 09.png
 └── data/cifar10/
     └── cifar-10-python.tar.gz             ~163 MB    源数据（入仓库供复现）
 ```
@@ -278,6 +305,12 @@ MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/lenet_pytorch.py
 # 4. 跑 MLP-vs-LeNet 对比实验（约 5 分钟 on MPS, 同时训两个模型）
 MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/compare_mlp_vs_lenet.py
 # 期望末尾: MLP 55%/42%, LeNet 62%/54%
+
+# 5. (可选) 启动 LeNet demo
+python code/week2/export_cifar_samples.py    # 首次必做: 导出 100 张 PNG
+python code/week2/inference.py               # 自检 inference 链路
+python code/week2/app.py                     # 启动 Gradio UI
+# 浏览器打开 http://127.0.0.1:7861
 ```
 
 ---

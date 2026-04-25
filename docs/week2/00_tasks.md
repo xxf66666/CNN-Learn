@@ -19,6 +19,7 @@
 | T7 | 手写实现 + 梯度检验 | conv2d_numpy + maxpool_numpy + grad check 复用 Week 1 套路 | ⬜ |
 | T8 | PyTorch 思维切换 | autograd 是怎么把 Week 1 手写的 backward 自动化的 | ⬜ |
 | T9 | LeNet-5 复现 + MLP 对比 | 在 CIFAR-10 上跑 LeNet，与同样训练的 MLP 比准确率和参数量 | ⬜ |
+| 拓展 | LeNet 双模式 demo | Gradio UI: ① 测试集浏览 (分布内) + ② 上传识别 (分布外限制说明) | ⬜ |
 
 ---
 
@@ -46,14 +47,19 @@ docs/week2/
   07_thinking_log.md       ← 思考过程记录
   08_code_walkthrough.md   ← T7（代码走读）
   09_pytorch_intro.md      ← T8（PyTorch 思维切换）
-  10_lenet_pytorch.md      ← T9（LeNet 实现）
+  10_lenet_pytorch.md      ← T9（LeNet 实现 + MLP 对比实验）
   11_week2_summary.md      ← 汇报性总结（同 Week 1 §10 格式）
+  12_lenet_demo.md         ← 拓展 demo 文档
 
 code/week2/
+  figures.py               ← 一键生成 10 张教学插图
   conv2d_numpy.py          ← 手写卷积前向 + 反向 + 梯度检验
   maxpool_numpy.py         ← 手写池化前向 + 反向
   lenet_pytorch.py         ← PyTorch LeNet-5 跑 CIFAR-10
   compare_mlp_vs_lenet.py  ← 拓展实验：同数据集下 MLP vs LeNet
+  export_cifar_samples.py  ← 拓展 demo: 导出 100 张测试集 PNG
+  inference.py             ← 拓展 demo: 加载 + 预处理 + 预测
+  app.py                   ← 拓展 demo: Gradio 双 tab UI
 
 assets/week2/
   outputs/                 ← 训练曲线、混淆矩阵、对比图
