@@ -1,6 +1,8 @@
 # CNN-Learn · Showcase
 
 > 一份对外展示用的精炼版。比 `docs/week2/11_week2_summary.md` 短 3 倍，适合作为博客底稿、PPT 大纲、或在 GitHub README 之外做独立分享。
+>
+> **个人学习记录性质**——内容可能存在错误或不严谨之处，欢迎 [issue](https://github.com/xxf66666/CNN-Learn/issues) / PR / discussion 批评指正。
 
 ---
 
