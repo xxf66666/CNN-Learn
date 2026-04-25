@@ -12,6 +12,11 @@ import numpy as np
 import os, struct, gzip, urllib.request
 import matplotlib.pyplot as plt
 
+# macOS Accelerate (vecLib) BLAS 在 matmul 边角处理时会触发硬件 FPE 标志位
+# 报"divide by zero / overflow / invalid"——是误报，结果数值正确（梯度检验可证）
+# 详见 docs/week1/08_code_walkthrough.md §4.1
+np.seterr(divide='ignore', over='ignore', invalid='ignore')
+
 plt.rcParams['font.family'] = ['Arial Unicode MS', 'sans-serif']
 plt.rcParams['axes.unicode_minus'] = False
 
@@ -393,6 +398,12 @@ if __name__ == '__main__':
         batch_size=256,
         epochs=20
     )
+
+    # 保存权重（供 inference.py / app.py 使用）
+    weights_path = os.path.join(ASSET_DIR, 'mlp_weights.npz')
+    os.makedirs(ASSET_DIR, exist_ok=True)
+    np.savez(weights_path, **params)
+    print(f'\n权重已保存: {weights_path}')
 
     # 可视化
     print('\n[ 步骤3 ] 生成可视化图...')

@@ -95,6 +95,45 @@ assets/week1/outputs/weights_layer1.png
 
 在本地测试中，默认参数训练 20 个 epoch 后，测试集准确率约为 `97%`。
 
+训练完成会顺带保存权重到 `assets/week1/outputs/mlp_weights.npz`，供下面的手绘 demo 加载使用。
+
+## 手绘数字识别 demo（可选）
+
+用 Gradio 起一个浏览器画板，鼠标手写一个数字让训好的 MLP 实时识别。
+
+**前置条件**：先跑一次训练（上一节）生成 `mlp_weights.npz`。
+
+启动 UI：
+
+```bash
+python code/week1/app.py
+```
+
+启动成功后控制台会打印：
+
+```text
+* Running on local URL:  http://127.0.0.1:7860
+```
+
+浏览器打开这个地址，**用鼠标在左边白色画板上画一个 0–9 的数字**，模型实时给出预测和 10 类概率分布。中间那张 28×28 灰度图就是模型实际"看到"的输入（经反色 + 重心居中等预处理后的结果）。
+
+> **注意**：笔刷是黑色（默认），白底黑笔才能看见自己画的笔画。
+
+可选：跑 inference 自检（确认权重加载和 forward 链路通畅，不启动 UI）：
+
+```bash
+python code/week1/inference.py
+# 期待输出：✓ inference 链路 OK
+```
+
+关闭 UI：
+
+```bash
+pkill -f "python code/week1/app.py"
+```
+
+如果遇到 `Couldn't start the app ... 502` 错误，是系统 HTTP 代理（Clash / V2Ray 等）拦截 localhost 健康检查导致的，`app.py` 已经在本进程里清掉了相关代理变量，不影响系统全局设置。详细原理、预处理细节、为什么自己手写的数字准确率比测试集低，见 `docs/week1/09_handwriting_demo.md`。
+
 ## 学习路线
 
 完整计划见：
