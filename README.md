@@ -114,17 +114,74 @@ conda activate cnn
 python -m pip install -r requirements.txt
 ```
 
-跑哪一周看你想要什么：
+下面按 Week 分组列出可以跑的命令。每条命令下方都标了**跑完会得到什么**——不用先读 docs，看输出描述就能决定要跑哪个。
 
-| 想看 | 命令 | 跑完会得到什么 |
-|---|---|---|
-| Week 1 训练（~1 min） | `MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week1/mlp_numpy.py` | 控制台: grad check 5 项 ✓ + 20 epoch 训练日志 + 最终测试 **97.5%**<br/>文件: `assets/week1/outputs/` 下 4 个 (训练曲线 / 预测可视化 / W1 权重热图 / 权重 `.npz`) |
-| Week 1 手绘 demo | `python code/week1/app.py` | 浏览器 http://127.0.0.1:7860 — 鼠标画板 + 84 px 大字预测 + 模型 28×28 视角 + 10 类概率柱（GIF 演示见上方）|
-| Week 2 教学插图（首次自动下载 CIFAR-10 ~163 MB）| `MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/figures.py` | `assets/week2/figures/` 下 **10 张教学 PNG**: Sobel 边缘检测 horse, 5 种经典 filter 对比, RGB 通道分解, padding 覆盖热图, 感受野扩张, MaxPool vs AvgPool, 4 张反向传播步骤图 |
-| Week 2 NumPy 卷积/池化 grad check | `python code/week2/conv2d_numpy.py`<br/>`python code/week2/maxpool_numpy.py` | 控制台: conv2d **24/24 ✓** + maxpool **15/15 ✓**（相对误差 1e-11 ~ 1e-13，数学正确性自动验证）|
-| Week 2 LeNet 训练（~8 min on Apple MPS）| `MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/lenet_pytorch.py` | 控制台: 10 epoch 日志 + 最终测试 **62.4%**（动物类 56.3%）<br/>文件: `assets/week2/outputs/` 下 4 个 (权重 `.pth` / 训练曲线 / 各类准确率柱图 / 历史 JSON) |
-| Week 2 MLP-vs-LeNet 对比实验 | `MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/compare_mlp_vs_lenet.py` | 控制台: 同训 MLP (1.7M 参数) 和 LeNet (62K 参数) 各 10 epoch，输出 4 个准确率（原 vs 平移 ±4 px）。**LeNet 准确率 +7.4%、平移鲁棒性 1.5×**<br/>文件: `assets/week2/outputs/mlp_vs_lenet_comparison.png` |
-| Week 2 LeNet demo | `python code/week2/export_cifar_samples.py`<br/>`python code/week2/app.py` | 第一步导出 100 张测试样本到 `assets/week2/samples/`（每类 10 张）；第二步打开浏览器 http://127.0.0.1:7861 — **双 tab**：① 测试集浏览（模型在分布内 ~62% 的真实表现）② 上传识别（看模型在分布外怎么"翻车" + 醒目分布限制说明） |
+### Week 1 — NumPy MLP on MNIST
+
+**训练 (~1 分钟)**
+
+```bash
+MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week1/mlp_numpy.py
+```
+
+控制台：grad check 5 项 ✓ + 20 epoch 训练日志 + 最终测试 **97.5%**。
+文件：`assets/week1/outputs/` 下 4 个 — 训练曲线、预测可视化、W1 权重热图、权重 `.npz`。
+
+**手绘 demo**
+
+```bash
+python code/week1/app.py
+```
+
+浏览器打开 http://127.0.0.1:7860 — 鼠标画板 + 84 px 大字预测 + 模型 28×28 视角 + 10 类概率柱（GIF 演示见上方）。
+
+### Week 2 — NumPy 卷积 + PyTorch LeNet on CIFAR-10
+
+**生成 10 张教学插图**（首次自动下载 CIFAR-10 ~163 MB）
+
+```bash
+MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/figures.py
+```
+
+`assets/week2/figures/` 下 **10 张教学 PNG**：Sobel 边缘检测 horse、5 种经典 filter 对比、RGB 通道分解、padding 覆盖热图、感受野扩张、MaxPool vs AvgPool、4 张反向传播步骤图。
+
+**NumPy 卷积 / 池化 grad check**
+
+```bash
+python code/week2/conv2d_numpy.py
+python code/week2/maxpool_numpy.py
+```
+
+控制台：conv2d **24 / 24 ✓** + maxpool **15 / 15 ✓**（相对误差 1e-11 ~ 1e-13，数学正确性自动验证）。
+
+**LeNet 训练 (~8 分钟 on Apple MPS)**
+
+```bash
+MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/lenet_pytorch.py
+```
+
+控制台：10 epoch 日志 + 最终测试 **62.4%**（动物类 56.3%）。
+文件：`assets/week2/outputs/` 下 4 个 — 权重 `.pth`、训练曲线、各类准确率柱图、历史 JSON。
+
+**MLP-vs-LeNet 对比实验**
+
+```bash
+MPLCONFIGDIR=/tmp/mplconfig MPLBACKEND=Agg python code/week2/compare_mlp_vs_lenet.py
+```
+
+控制台：同时训 MLP (1.7 M 参数) 和 LeNet (62 K 参数) 各 10 epoch，输出 4 个准确率（原测试集 vs 平移 ±4 px）。**LeNet 准确率 +7.4 个百分点，平移鲁棒性是 MLP 的 1.5 倍**。
+文件：`assets/week2/outputs/mlp_vs_lenet_comparison.png`。
+
+**LeNet 双模式 demo**
+
+```bash
+python code/week2/export_cifar_samples.py    # 首次必做: 导出 100 张测试样本 PNG
+python code/week2/app.py                      # 启动 Gradio UI
+```
+
+第一步把测试集每类 10 张导出到 `assets/week2/samples/`；第二步打开浏览器 http://127.0.0.1:7861，**双 tab**：① 测试集浏览（模型在分布内 ~62% 的真实表现） ② 上传识别（看模型在分布外怎么"翻车" + 醒目分布限制说明）。
+
+---
 
 > **代理坑提示**：如果遇到 Gradio `502 Couldn't start the app` 错误，是系统 HTTP 代理（Clash / V2Ray 等）拦截 localhost 健康检查导致的；两个 `app.py` 都已在本进程里清掉相关代理变量，不影响系统全局设置。
 
