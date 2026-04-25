@@ -153,7 +153,7 @@ $$\exp(x) > 0 \quad \text{对所有实数 } x \text{ 成立}$$
 
 $\exp(x)$ 的图像与数值感受（左图）：
 
-![exp 与交叉熵损失](../../assets/week1/exp_and_crossentropy.png)
+![exp 与交叉熵损失](../../assets/week1/figures/01_modeling/exp_crossentropy.png)
 
 | $x$ | $e^x$ |
 |-----|-------|

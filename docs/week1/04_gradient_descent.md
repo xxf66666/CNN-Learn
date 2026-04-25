@@ -29,7 +29,7 @@ $$\frac{d\mathcal{L}}{dW}\bigg|_{W=-1} = 2(-1-2) = -6$$
 
 导数 $= -6$，是负数，说明这里曲线向左上方倾斜——**往右走损失会下降**。
 
-![导数几何意义](../../assets/week1/gradient_geometry.png)
+![导数几何意义](../../assets/week1/figures/04_gradient/geometry.png)
 
 三个关键点：
 
@@ -62,7 +62,7 @@ $$\boxed{W \leftarrow W - \eta \cdot \frac{d\mathcal{L}}{dW}}$$
 
 ## 4. 一维梯度下降的完整过程
 
-![梯度下降过程与学习率对比](../../assets/week1/gradient_descent_1d.png)
+![梯度下降过程与学习率对比](../../assets/week1/figures/04_gradient/descent_1d.png)
 
 **左图**：从 $W = -1$ 出发，学习率 $\eta = 0.4$，7步走到接近最优点 $W^* = 2$。
 
@@ -102,7 +102,7 @@ $$W \leftarrow W - \eta \cdot \nabla_W \mathcal{L}$$
 
 ## 6. 二维损失曲面的直觉
 
-![二维损失曲面](../../assets/week1/gradient_descent_2d.png)
+![二维损失曲面](../../assets/week1/figures/04_gradient/descent_2d.png)
 
 - **左图**：等高线图。颜色越深损失越小，中心是最优点。梯度下降的路径沿着等高线的法线方向（最陡的方向）一步步走向中心
 - **右图**：三维曲面图。我们在一个"碗"里，目标是滚到碗底

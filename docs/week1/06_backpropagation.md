@@ -32,7 +32,7 @@ $\partial$ 读作"偏"，表示这是**偏导数**——只对某一个变量求
 
 ### 3.2 图像理解
 
-![偏导数几何意义](../../assets/week1/partial_derivative.png)
+![偏导数几何意义](../../assets/week1/figures/06_backprop/partial_derivative.png)
 
 左图：损失面是一个三维曲面，有两个参数 $W_1, W_2$。
 - **橙色曲线**：固定 $W_2 = 0$，沿 $W_1$ 方向切一刀，得到一条曲线，这条曲线的斜率就是 $\frac{\partial \mathcal{L}}{\partial W_1}$
@@ -104,7 +104,7 @@ $$\boxed{\frac{\partial \mathcal{L}}{\partial \mathbf{h}} = W^\top \boldsymbol{\
 
 ### 4.4 为什么要转置——维度的直觉
 
-![矩阵梯度](../../assets/week1/matrix_gradient.png)
+![矩阵梯度](../../assets/week1/figures/06_backprop/matrix_gradient.png)
 
 左图：$\boldsymbol{\delta}$（$m \times 1$）和 $\mathbf{h}^\top$（$1 \times n$）相乘，结果是 $m \times n$，和 $W$ 形状一致 ✓
 
@@ -124,7 +124,7 @@ $$\begin{bmatrix}a_1 \\ a_2 \\ a_3\end{bmatrix} \odot \begin{bmatrix}b_1 \\ b_2 
 
 ### 5.1 ReLU 反向传播用到 $\odot$
 
-![Hadamard积与ReLU反向](../../assets/week1/hadamard_relu_backward.png)
+![Hadamard积与ReLU反向](../../assets/week1/figures/06_backprop/hadamard_relu.png)
 
 ReLU 的前向传播：$h_i = \max(0, z_i)$
 
@@ -176,7 +176,7 @@ $$\frac{\partial \mathcal{L}}{\partial z_i} = P_i - \underbrace{\mathbb{1}[i=y]}
 
 $$\boxed{\frac{\partial \mathcal{L}}{\partial \mathbf{z}} = \mathbf{P} - \hat{\mathbf{P}}}$$
 
-![Softmax梯度直觉](../../assets/week1/softmax_ce_gradient.png)
+![Softmax梯度直觉](../../assets/week1/figures/06_backprop/softmax_ce_grad.png)
 
 左图：预测概率 $P$（蓝）vs 真实分布 $\hat{P}$（绿，one-hot）。每个类的梯度就是两者之差。
 
@@ -190,7 +190,7 @@ $$\boxed{\frac{\partial \mathcal{L}}{\partial \mathbf{z}} = \mathbf{P} - \hat{\m
 
 ## 7. 计算图：把网络画成一张图
 
-![计算图](../../assets/week1/computation_graph.png)
+![计算图](../../assets/week1/figures/06_backprop/computation_graph.png)
 
 - **蓝色箭头**：前向传播，数据从左到右，最终算出 $\mathcal{L}$
 - **橙色箭头**：反向传播，梯度从右到左，每个节点只需知道自己的局部梯度
@@ -231,7 +231,7 @@ $$\text{第1层梯度} \approx 0.25^{10} = 9.5 \times 10^{-7} \approx 0$$
 
 **ReLU 正数区导数恒为 1**，梯度不衰减。
 
-![梯度消失](../../assets/week1/vanishing_gradient.png)
+![梯度消失](../../assets/week1/figures/06_backprop/vanishing_gradient.png)
 
 这是 2010 年之前深层网络难以训练的根本原因。AlexNet（2012）大规模使用 ReLU，深度学习才真正爆发。
 

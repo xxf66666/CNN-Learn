@@ -46,7 +46,7 @@ $$\frac{\partial \mathcal{L}_{\text{直觉}}}{\partial W} = 0 \quad \text{（几
 
 $$y = 2 \quad \Rightarrow \quad \hat{\mathbf{P}} = [0,\ 0,\ \underbrace{1}_{位置2},\ 0,\ 0,\ 0,\ 0,\ 0,\ 0,\ 0]$$
 
-![One-Hot 编码示意](../../assets/week1/one_hot.png)
+![One-Hot 编码示意](../../assets/week1/figures/03_loss/one_hot.png)
 
 这个向量 $\hat{\mathbf{P}}$ 代表"完美预测"：正确类概率为 1，其余为 0。  
 我们的目标是让模型输出的 $\mathbf{P}$ 尽量接近 $\hat{\mathbf{P}}$。
@@ -82,7 +82,7 @@ $\log$ 函数在 $(0,1]$ 上是负数，加了负号之后：
 
 ### 4.3 完整流水线图解
 
-![完整流水线](../../assets/week1/loss_pipeline.png)
+![完整流水线](../../assets/week1/figures/03_loss/pipeline.png)
 
 - **情况 A**：模型对鸟（真实类）的 logit 最高（3.1），Softmax 后概率约 0.80，损失 ≈ 0.22
 - **情况 B**：模型对所有类 logit 差不多（均匀混乱），鸟的概率只有约 0.11，损失 ≈ 2.2
@@ -147,7 +147,7 @@ $$\mathcal{L} = -s_y + \log\sum_j e^{s_j}$$
 
 $$\mathcal{L}_{\text{MSE}} = \frac{1}{10}\sum_{i=0}^{9}(P_i - \hat{P}_i)^2$$
 
-![交叉熵 vs MSE](../../assets/week1/ce_vs_mse.png)
+![交叉熵 vs MSE](../../assets/week1/figures/03_loss/ce_vs_mse.png)
 
 左图对比损失曲线，右图对比梯度强度：
 

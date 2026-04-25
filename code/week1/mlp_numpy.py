@@ -255,7 +255,7 @@ def evaluate(X, y, params):
 # 9. 可视化
 # ─────────────────────────────────────────────
 
-ASSET_DIR = os.path.join(os.path.dirname(__file__), '../../assets/week1')
+ASSET_DIR = os.path.join(os.path.dirname(__file__), '../../assets/week1/outputs')
 
 def plot_training(history):
     fig, axes = plt.subplots(1, 2, figsize=(13, 5))
@@ -284,7 +284,7 @@ def plot_training(history):
     axes[1].grid(alpha=0.15)
 
     plt.tight_layout()
-    path = os.path.join(ASSET_DIR, 'mnist_training_curve.png')
+    path = os.path.join(ASSET_DIR, 'training_curve.png')
     plt.savefig(path, dpi=150, bbox_inches='tight', facecolor='#0f1117')
     print(f'曲线图已保存: {path}')
     plt.show()
@@ -306,7 +306,7 @@ def plot_predictions(X_test, y_test, params, n=20):
         ax.set_title(f'预测:{preds[i]}\n真实:{y_test[i]}', color=color, fontsize=9)
 
     plt.tight_layout()
-    path = os.path.join(ASSET_DIR, 'mnist_predictions.png')
+    path = os.path.join(ASSET_DIR, 'predictions.png')
     plt.savefig(path, dpi=150, bbox_inches='tight', facecolor='#0f1117')
     print(f'预测图已保存: {path}')
     plt.show()
@@ -325,7 +325,7 @@ def plot_weight_visualization(params):
         ax.axis('off')
 
     plt.tight_layout()
-    path = os.path.join(ASSET_DIR, 'mnist_weights.png')
+    path = os.path.join(ASSET_DIR, 'weights_layer1.png')
     plt.savefig(path, dpi=150, bbox_inches='tight', facecolor='#0f1117')
     print(f'权重图已保存: {path}')
     plt.show()

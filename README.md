@@ -88,9 +88,9 @@ data/mnist/
 运行完成后会生成：
 
 ```text
-assets/week1/mnist_training_curve.png
-assets/week1/mnist_predictions.png
-assets/week1/mnist_weights.png
+assets/week1/outputs/training_curve.png
+assets/week1/outputs/predictions.png
+assets/week1/outputs/weights_layer1.png
 ```
 
 在本地测试中，默认参数训练 20 个 epoch 后，测试集准确率约为 `97%`。

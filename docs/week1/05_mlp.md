@@ -33,7 +33,7 @@ $$\mathbf{s} = W^{(2)}\!\left(W^{(1)}\mathbf{x} + \mathbf{b}^{(1)}\right) + \mat
 | 0 | 1 | 1 | 不同→1 |
 | 1 | 0 | 1 | 不同→1 |
 
-![XOR 不可分](../../assets/week1/xor_problem.png)
+![XOR 不可分](../../assets/week1/figures/05_mlp/xor_problem.png)
 
 **左图**：4 个点，无论怎么画一条直线，都无法把两类分开——这叫**线性不可分**。
 
@@ -90,7 +90,7 @@ $$\text{输出} = \sigma\!\left(\sum_{j} w_j \cdot \text{输入}_j + b\right)$$
 
 用一个 $2\to3\to2$ 的小网络走一遍完整的前向传播。
 
-![前向传播数值示例](../../assets/week1/forward_pass.png)
+![前向传播数值示例](../../assets/week1/figures/05_mlp/forward_pass.png)
 
 **输入**：$\mathbf{x} = [1.0,\ 0.5]^\top$
 
@@ -114,7 +114,7 @@ $$\mathbf{h}^{(1)} = [0.45,\ 0.40,\ 0.50]^\top \quad \text{（全为正数，原
 
 ## 7. 层数越深，能力越强
 
-![决策边界演化](../../assets/week1/decision_boundary.png)
+![决策边界演化](../../assets/week1/figures/05_mlp/decision_boundary.png)
 
 用"月牙形"数据集直观展示：
 
@@ -132,7 +132,7 @@ $$\mathbf{h}^{(1)} = [0.45,\ 0.40,\ 0.50]^\top \quad \text{（全为正数，原
 
 ## 8. 激活函数全景
 
-![激活函数全景](../../assets/week1/activation_all.png)
+![激活函数全景](../../assets/week1/figures/05_mlp/activations.png)
 
 ### Sigmoid
 

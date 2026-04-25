@@ -52,7 +52,7 @@ Code comments contain references like `T2`, `T7`, `对应 docs/week1/06_backprop
 
 Network shape `784 → 128 → 64 → 10` and parameter naming `W1/b1/W2/b2/W3/b3` are referenced throughout `forward`, `backward`, `gradient_check`, and `plot_weight_visualization` (which reshapes `W1[:, i]` to 28×28). Changing the shape requires touching all of these, not just `init_params`.
 
-Outputs go to `assets/week1/` (the dir is computed relative to `__file__`). Plots use a fixed dark theme (`#0f1117` figure, `#1a1d27` axes); when adding new plots in future weeks, follow the same palette so the assets look coherent across the project.
+Training-script outputs go to `assets/week1/outputs/` (`training_curve.png`, `predictions.png`, `weights_layer1.png`); doc illustrations live under `assets/week1/figures/<chapter>/`. Plots use a fixed dark theme (`#0f1117` figure, `#1a1d27` axes); when adding new plots in future weeks, follow the same palette so the assets look coherent across the project.
 
 ## Future Weeks (per `docs/00_learning_plan.md`)
 
