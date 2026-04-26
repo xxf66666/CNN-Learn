@@ -297,9 +297,9 @@ if __name__ == '__main__':
     print(f'\n[model] LeNet-5')
     print(f'  参数量: {count_params(model):,}')
 
-    print('\n[train] 开始训练 (10 epoch, SGD + momentum) ...')
+    print('\n[train] 开始训练 (60 epoch, SGD + momentum) ...')
     history = train(model, trainloader, testloader, device,
-                    epochs=10, lr=0.01, momentum=0.9)
+                    epochs=60, lr=0.01, momentum=0.9)
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
