@@ -1,0 +1,49 @@
+<svg width="980" height="430" viewBox="0 0 980 430" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="980" height="430" fill="#F8FAFC"/>
+  <text x="42" y="48" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#111827">Softmax 把“分数”变成“概率”</text>
+  <text x="42" y="78" font-family="Arial, sans-serif" font-size="15" fill="#4B5563">例子：logits = [2.0, 1.0, 0.5]，先 exp 变正数，再除以总和</text>
+
+  <defs>
+    <marker id="arrow3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64748B"/>
+    </marker>
+  </defs>
+
+  <g font-family="Arial, sans-serif">
+    <rect x="48" y="112" width="350" height="248" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="80" y="148" font-size="19" font-weight="700" fill="#111827">Softmax 之前：logits</text>
+    <line x1="92" y1="304" x2="340" y2="304" stroke="#CBD5E1" stroke-width="2"/>
+    <rect x="112" y="184" width="48" height="120" rx="7" fill="#2563EB"/>
+    <rect x="194" y="244" width="48" height="60" rx="7" fill="#60A5FA"/>
+    <rect x="276" y="274" width="48" height="30" rx="7" fill="#93C5FD"/>
+    <text x="118" y="174" font-size="16" fill="#1E3A8A">2.0</text>
+    <text x="200" y="234" font-size="16" fill="#1E3A8A">1.0</text>
+    <text x="282" y="264" font-size="16" fill="#1E3A8A">0.5</text>
+    <text x="106" y="334" font-size="15" fill="#475569">class 0</text>
+    <text x="188" y="334" font-size="15" fill="#475569">class 1</text>
+    <text x="270" y="334" font-size="15" fill="#475569">class 2</text>
+    <text x="82" y="384" font-size="15" fill="#64748B">分数可以任意取值，不是概率。</text>
+
+    <line x1="420" y1="230" x2="548" y2="230" stroke="#64748B" stroke-width="3" marker-end="url(#arrow3)"/>
+    <rect x="432" y="171" width="96" height="88" rx="14" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="2"/>
+    <text x="455" y="207" font-size="20" font-weight="700" fill="#3730A3">exp</text>
+    <text x="442" y="234" font-size="14" fill="#4338CA">再归一化</text>
+
+    <rect x="580" y="112" width="350" height="248" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="612" y="148" font-size="19" font-weight="700" fill="#111827">Softmax 之后：概率</text>
+    <line x1="624" y1="304" x2="872" y2="304" stroke="#CBD5E1" stroke-width="2"/>
+    <rect x="644" y="180" width="48" height="124" rx="7" fill="#16A34A"/>
+    <rect x="726" y="258" width="48" height="46" rx="7" fill="#4ADE80"/>
+    <rect x="808" y="276" width="48" height="28" rx="7" fill="#86EFAC"/>
+    <text x="638" y="170" font-size="16" fill="#166534">0.628</text>
+    <text x="720" y="248" font-size="16" fill="#166534">0.231</text>
+    <text x="802" y="266" font-size="16" fill="#166534">0.140</text>
+    <text x="638" y="334" font-size="15" fill="#475569">class 0</text>
+    <text x="720" y="334" font-size="15" fill="#475569">class 1</text>
+    <text x="802" y="334" font-size="15" fill="#475569">class 2</text>
+    <text x="614" y="384" font-size="15" fill="#64748B">每个值在 0 到 1 之间，总和约等于 1。</text>
+
+    <rect x="314" y="382" width="352" height="34" rx="10" fill="#FFFBEB" stroke="#FDE68A" stroke-width="2"/>
+    <text x="336" y="405" font-size="16" fill="#92400E">最大分数的位置不变：class 0 仍然最大。</text>
+  </g>
+</svg>

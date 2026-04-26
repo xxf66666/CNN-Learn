@@ -1,0 +1,35 @@
+<svg width="960" height="300" viewBox="0 0 960 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="300" fill="#F8FAFC"/>
+  <text x="42" y="46" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#111827">从输入向量到类别编号</text>
+  <text x="42" y="76" font-family="Arial, sans-serif" font-size="15" fill="#4B5563">抽象地看，分类函数 g 接收一个 3072 维向量，输出一个离散类别编号</text>
+
+  <defs>
+    <marker id="arrow4" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64748B"/>
+    </marker>
+  </defs>
+
+  <g font-family="Arial, sans-serif">
+    <rect x="54" y="118" width="312" height="112" rx="16" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="84" y="150" font-size="18" font-weight="700" fill="#111827">输入 x ∈ R^3072</text>
+    <text x="84" y="180" font-size="15" fill="#475569">[0.12, 0.83, 0.04, ..., 0.57]</text>
+    <text x="84" y="207" font-size="15" fill="#475569">一张图片展平后的 3072 个数</text>
+
+    <line x1="386" y1="174" x2="478" y2="174" stroke="#64748B" stroke-width="3" marker-end="url(#arrow4)"/>
+
+    <rect x="500" y="104" width="160" height="140" rx="22" fill="#DBEAFE" stroke="#60A5FA" stroke-width="2"/>
+    <text x="562" y="158" font-size="30" font-weight="700" fill="#1E3A8A">g</text>
+    <text x="536" y="190" font-size="16" fill="#1E40AF">分类函数</text>
+    <text x="530" y="216" font-size="14" fill="#1E40AF">x → y</text>
+
+    <line x1="682" y1="174" x2="774" y2="174" stroke="#64748B" stroke-width="3" marker-end="url(#arrow4)"/>
+
+    <rect x="796" y="118" width="112" height="112" rx="18" fill="#DCFCE7" stroke="#86EFAC" stroke-width="2"/>
+    <text x="832" y="158" font-size="18" font-weight="700" fill="#166534">输出 y</text>
+    <text x="842" y="194" font-size="34" font-weight="700" fill="#166534">3</text>
+    <text x="820" y="219" font-size="14" fill="#166534">类别编号</text>
+
+    <rect x="286" y="260" width="390" height="28" rx="9" fill="#FFFBEB" stroke="#FDE68A" stroke-width="2"/>
+    <text x="308" y="280" font-size="14" fill="#92400E">这里的 3 只是类别索引，例如 cat，不表示数值大小。</text>
+  </g>
+</svg>

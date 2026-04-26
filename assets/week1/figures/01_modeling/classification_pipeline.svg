@@ -1,0 +1,44 @@
+<svg width="1040" height="340" viewBox="0 0 1040 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1040" height="340" fill="#F8FAFC"/>
+  <text x="42" y="48" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#111827">图像分类的一条完整流水线</text>
+  <text x="42" y="78" font-family="Arial, sans-serif" font-size="15" fill="#4B5563">从像素向量，到类别分数，再到概率，最后得到预测类别</text>
+
+  <defs>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64748B"/>
+    </marker>
+  </defs>
+
+  <g font-family="Arial, sans-serif">
+    <rect x="48" y="132" width="132" height="92" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="80" y="166" font-size="18" font-weight="700" fill="#111827">图片 x</text>
+    <text x="68" y="196" font-size="15" fill="#475569">3072 个像素值</text>
+
+    <line x1="198" y1="178" x2="274" y2="178" stroke="#64748B" stroke-width="3" marker-end="url(#arrow2)"/>
+
+    <rect x="292" y="118" width="150" height="120" rx="18" fill="#DBEAFE" stroke="#60A5FA" stroke-width="2"/>
+    <text x="340" y="159" font-size="24" font-weight="700" fill="#1E3A8A">fθ</text>
+    <text x="320" y="191" font-size="15" fill="#1E40AF">模型函数</text>
+    <text x="314" y="216" font-size="14" fill="#1E40AF">参数会被训练更新</text>
+
+    <line x1="462" y1="178" x2="538" y2="178" stroke="#64748B" stroke-width="3" marker-end="url(#arrow2)"/>
+
+    <rect x="556" y="110" width="146" height="136" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="596" y="140" font-size="18" font-weight="700" fill="#111827">logits</text>
+    <text x="586" y="171" font-size="15" fill="#475569">原始分数</text>
+    <text x="584" y="198" font-size="15" fill="#475569">[-1.2, 3.4, ...]</text>
+    <text x="586" y="225" font-size="15" fill="#475569">可正可负</text>
+
+    <line x1="722" y1="178" x2="798" y2="178" stroke="#64748B" stroke-width="3" marker-end="url(#arrow2)"/>
+
+    <rect x="816" y="110" width="160" height="136" rx="14" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="856" y="140" font-size="18" font-weight="700" fill="#111827">概率 P</text>
+    <text x="846" y="171" font-size="15" fill="#475569">Softmax 后</text>
+    <text x="846" y="198" font-size="15" fill="#475569">[0.02, 0.84, ...]</text>
+    <text x="846" y="225" font-size="15" fill="#475569">总和 = 1</text>
+
+    <line x1="896" y1="254" x2="896" y2="286" stroke="#64748B" stroke-width="3" marker-end="url(#arrow2)"/>
+    <rect x="790" y="294" width="212" height="34" rx="10" fill="#DCFCE7" stroke="#86EFAC" stroke-width="2"/>
+    <text x="827" y="317" font-size="16" font-weight="700" fill="#166534">argmax → 预测类别</text>
+  </g>
+</svg>
