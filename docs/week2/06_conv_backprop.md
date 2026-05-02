@@ -135,6 +135,41 @@ grad_W = correlate2d(X, delta)   # X 是输入, delta 是输出端梯度, 输出
 
 这跟 T2 §3 前向算 Y 的过程**一模一样**，只是把"W 当 filter 滑过 X 得到 Y"换成了"δ 当 filter 滑过 X 得到 ∇W"。
 
+### 3.5 完整算例：用同一组 (X, W, δ) 同时验证三个梯度
+
+到目前为止我们分头推了 $\nabla W$、$\nabla X$（下一节）、$\nabla b$。下面给一组**统一的具体数字**，把三个梯度都端到端跑一遍——这是 T7 写代码后做 sanity check 的最快方式。
+
+设：
+
+$$X = \begin{bmatrix}1 & 2 & 3 & 1 \\ 4 & 5 & 1 & 2 \\ 2 & 3 & 4 & 5 \\ 1 & 2 & 0 & 3\end{bmatrix},\quad
+W = \begin{bmatrix}1 & 0 \\ -1 & 1\end{bmatrix},\quad
+b = 0,\quad
+\delta = \begin{bmatrix}1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1\end{bmatrix}$$
+
+为什么 $\delta$ 取**全 1**？因为这样可以让"通道维空间维求和"的结构最清晰——任何一个梯度位置的值都直接显示出"前向时它被多少次贡献"。
+
+前向 $Y = X \star W + b$（按 T2 公式逐格算）：
+
+$$Y = \begin{bmatrix}2 & -2 & 4 \\ 5 & 6 & 2 \\ 3 & 1 & 7\end{bmatrix}$$
+
+反向算出三个梯度（手算 + numpy 双重验证）：
+
+$$\nabla W = X \star \delta = \begin{bmatrix}25 & 26 \\ 22 & 25\end{bmatrix},\quad
+\nabla X = \delta * W = \begin{bmatrix}1 & 1 & 1 & 0 \\ 0 & 1 & 1 & 1 \\ 0 & 1 & 1 & 1 \\ -1 & 0 & 0 & 1\end{bmatrix},\quad
+\nabla b = \sum \delta = 9$$
+
+可视化全景：
+
+![完整反向传播算例：X, W, δ → ∇W, ∇X, ∇b](../../assets/week2/figures/06_conv_backprop/backprop_full_example.png)
+
+**三个值得记的事实**（看图就懂）：
+
+1. **$\nabla W[0, 0] = 25$ = $X$ 左上 3×3 子块之和**——因为 $\delta$ 全 1，$\nabla W[m, n]$ 就是 $X$ 移位后求和。验证：$X[0:3, 0:3] = (1+2+3) + (4+5+1) + (2+3+4) = 25$ ✓
+2. **$\nabla X$ 的 4 个角值就是 $W$ 的 4 个角**：$\nabla X[0, 0] = W[0, 0] = 1$、$\nabla X[3, 3] = W[1, 1] = 1$、$\nabla X[3, 0] = W[1, 0] = -1$、$\nabla X[0, 3] = W[0, 1] = 0$。这是因为角落位置只被一个 $\delta$ 用到（其他位置都被 $W$ 完整覆盖一次 = $1+0-1+1 = 1$，所以中间区域全是 1）。
+3. **$\nabla b = 9$** = $\delta$ 9 格之和。一行求和。
+
+> **手算验证 $\nabla X[1,1]$**：内部点能被 $W$ 完整覆盖，所以 $\nabla X[1,1] = \delta[0,0]\cdot W[1,1] + \delta[0,1]\cdot W[1,0] + \delta[1,0]\cdot W[0,1] + \delta[1,1]\cdot W[0,0] = 1\cdot 1 + 1\cdot(-1) + 1\cdot 0 + 1\cdot 1 = 1$ ✓。这条手算公式正是 §4 要推的"$W$ 翻转"——下一节会从抽象索引推一遍同一件事。
+
 ---
 
 ## 4. $\nabla X$：传给上一层的梯度（最难，结果是真正的卷积）
@@ -222,27 +257,48 @@ grad_X = correlate2d(np.pad(delta, k-1), np.flip(W, axis=(0, 1)))   # 翻转 W
 
 ### 4.5 直觉：反向梯度是怎么"汇聚"的
 
-```
-前向: 每个输入 X[a,b] 同时影响多个 Y[i,j]
-                 (在它的 k×k 邻域内的输出都用了它)
+把 §4.1–§4.3 推的公式翻译成"前向流出 / 反向汇聚"的双路图——前向时一个 $X[a,b]$ 影响 4 个 $Y[i,j]$（W 是 2×2 的情况），反向时 4 个 $\delta[i,j]\cdot W$ 项汇聚回 $\nabla X[a, b]$：
 
-      X[a,b] ──┬──→ Y[i₀, j₀]
-               │
-               ├──→ Y[i₁, j₁]
-               │       ...
-               └──→ Y[iₖ-₁, jₖ-₁]
+![反向梯度怎么汇聚 + W 翻转怎么自然冒出](../../assets/week2/figures/06_conv_backprop/gradient_aggregation.png)
 
+把图右侧那条公式重排：
 
-反向: ∇X[a,b] 必须把所有用过 X[a,b] 的 Y 处梯度加起来
-                 (而且每个梯度还要乘对应位置的 W 值)
+$$\nabla X[1, 1] \;=\; \delta[0,0]\,W[1,1] + \delta[0,1]\,W[1,0] + \delta[1,0]\,W[0,1] + \delta[1,1]\,W[0,0]$$
 
-      Y[i₀, j₀] · W[?, ?] ──┐
-      Y[i₁, j₁] · W[?, ?] ──┼──→ ∇X[a,b]
-              ...           │       (累加)
-      Y[iₖ-₁,jₖ-₁]· W[?,?] ─┘
-```
+如果把它写成"$\delta$ 子区与某个 2×2 矩阵对位乘求和"，那个 2×2 矩阵就是 $\begin{bmatrix}W[1,1] & W[1,0] \\ W[0,1] & W[0,0]\end{bmatrix} = \text{flip}(W)$。
+
+> **要点**：$W$ 翻转**不是数学家拍脑袋加上去的步骤**，而是反向时索引天然反走（前向用 $W[m, n]$、反向用 $W[a-i, b-j]$）的副产物。如果你 §4.4.5 那张图还有疑问，再看一次这张：箭头方向直接告诉你"哪个 $Y$ 的哪个 $W$ 元素回到 $\nabla X[1,1]$"。
 
 把这些"累加"按公式整理后，恰好就是 §4.2 那个真正卷积的形式。
+
+### 4.6 stride > 1 时反向：在 $\delta$ 之间插 0
+
+§3-§4 默认 **stride=1**。但现代 CNN（ResNet 起）经常用 stride=2 卷积取代池化做下采样，这时反向需要一个额外的小步骤。
+
+**直觉先讲清**：stride=$s$ 的前向只在 $X$ 上每 $s$ 个像素采一次样——所以 $\delta[i, j]$ 只对应 $X$ 上 $(i\!\cdot\! s, j\!\cdot\! s)$ 那一格，中间被跳过的位置（在 stride=1 下"本来会有"的输出梯度）应该填 0。
+
+**做法**：把 $\delta$ 元素之间插入 $(s - 1)$ 个 0，得到一个"dilated δ"，**再做和 §4.4 完全一样的标准流程**（pad $k-1$ 圈 0 + 用 flip(W) 做 correlate）。
+
+![stride=2 反向：在 δ 之间插 0](../../assets/week2/figures/06_conv_backprop/stride2_backward.png)
+
+形状对账（取 $X = 5\times 5$、$W = 3\times 3$、$s = 2$）：
+
+- 前向 $Y$ 的形状 $= \lfloor (5 - 3) / 2 \rfloor + 1 = 2$，所以 $\delta$ 是 $2 \times 2$
+- dilated $\delta$ 形状 $= (2 - 1)\!\cdot\! 2 + 1 = 3$，是 $3 \times 3$
+- 再 pad $k-1 = 2$ 圈 0，得到 $7 \times 7$
+- correlate 一个 $3 \times 3$ 的 flip($W$)，输出 $7 - 3 + 1 = 5$，正好回到 $X$ 的 $5 \times 5$ ✓
+
+代码上只需要两行：
+
+```python
+# δ 形状 (Hδ, Wδ), s = stride
+dilated = np.zeros(((Hδ - 1) * s + 1, (Wδ - 1) * s + 1))
+dilated[::s, ::s] = delta
+# 后续 ∇X 计算和 stride=1 完全一样
+grad_X = correlate2d(np.pad(dilated, k - 1), np.flip(W, axis=(0, 1)))
+```
+
+> **为什么不必更新 ∇W 公式**？$\nabla W$ 的 stride 处理可以用同样的 dilated trick（把 $\delta$ 当 filter 在 $X$ 上滑时，stride 体现在 "$\delta$ 之间是否有空隙" 上）。多数实现里直接复用 dilated $\delta$ 同时支撑 $\nabla W$ 和 $\nabla X$，省了一次扩展。
 
 ---
 
@@ -257,6 +313,18 @@ $$\frac{\partial \mathcal L}{\partial b} = \sum_{i, j} \delta[i, j]$$
 ```python
 grad_b = delta.sum()
 ```
+
+### 5.1 多 batch + 多 filter 时的 axis 陷阱
+
+实际训练时 $\delta$ 形状是 $(N, C_\text{out}, H', W')$——多了 batch 维 $N$ 和输出通道维 $C_\text{out}$，对应的 bias 梯度形状应该是 $(C_\text{out},)$。所以正确的 numpy 写法是：
+
+$$\nabla b[k_o] = \sum_{n=0}^{N-1} \sum_{i, j} \delta[n,\, k_o,\, i,\, j]$$
+
+```python
+grad_b = delta.sum(axis=(0, 2, 3))   # 在 batch 和空间维上都求和, 留下 (C_out,)
+```
+
+**易错点**：很多教程（包括本文档早期版本）写成 `delta.sum(axis=(2, 3))`——那只在空间维求和，得到 $(N, C_\text{out})$，**漏掉了 batch 维**。bias 是跨 batch 共享的参数，必须把 batch 求和折叠掉，否则参数和梯度形状对不上、`optimizer.step()` 会直接报错或静默错误。
 
 ---
 
@@ -391,8 +459,9 @@ flowchart TD
 | 量 | 公式 | numpy 实现关键步骤 |
 |---|---|---|
 | $\nabla W$ | $X \star \delta$ | 对每对 $(c, k_o)$，把 $X[c]$ 与 $\delta[k_o]$ 做互相关 |
-| $\nabla b$ | $\sum_\text{spatial} \delta$ | `delta.sum(axis=(2, 3))` |
-| $\nabla X$ | $\delta * W$（真正卷积，需 pad 和 flip） | pad $\delta$ 四周 $k-1$ 圈 0；翻转 $W$；做互相关 |
+| $\nabla b$ | $\sum_\text{batch + spatial} \delta$ | `delta.sum(axis=(0, 2, 3))`（batch + 空间一起求和，得 `(C_out,)`） |
+| $\nabla X$（stride=1）| $\delta * W$（真正卷积，需 pad 和 flip） | pad $\delta$ 四周 $k-1$ 圈 0；翻转 $W$；做互相关 |
+| $\nabla X$（stride>1）| 先 dilate $\delta$ 再走 stride=1 流程 | `dilated[::s, ::s] = delta`；后续和上行一致 |
 | MaxPool $\nabla X$ | 稀疏路由到 max 位置 | 前向缓存 argmax，反向只在那个位置加 $\delta$ |
 | AvgPool $\nabla X$ | $\delta / k^2$ 均匀铺开 | 直接用广播 |
 
